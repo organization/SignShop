@@ -1,0 +1,5 @@
+name: SignShop
+main: zingding.SignShop
+author: ZINGDING  
+version: 0.0.1-SNAPSHOT
+api: [1.0.0]
