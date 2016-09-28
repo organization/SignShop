@@ -1,2 +1,2 @@
 # SignShop
-SignShop for Nukkit
+SignShop for Nukkit.
