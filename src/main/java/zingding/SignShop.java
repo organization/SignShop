@@ -68,7 +68,7 @@ public class SignShop extends PluginBase implements Listener {
 		Iterator item = Item.getCreativeItems().iterator();
 
 		while (item.hasNext()) {
-			this.json.put(((Item) item.next()).getName(), new Double[] { Double.valueOf(0.0D), Double.valueOf(0.0D) });
+			this.json.put(((Item) item.next()).getName(), new Double[] { Double.valueOf(0.0), Double.valueOf(0.0) });
 		}
 
 		try {
@@ -156,9 +156,9 @@ public class SignShop extends PluginBase implements Listener {
 
 	public void onEnable() {
 		this.getServer().getPluginManager().registerEvents(this, this);
-		this.registerCommand("구매", "아이템을 구매합니다.", "/구매 [수량]", "SignShop.commands.buy.buy", new String[] { "buy" });
-		this.registerCommand("판매", "아이템을 판매합니다.", "/판매 [수량]", "SignShop.commands.sell.sell", new String[] { "sell" });
-		this.registerCommand("상점", "상점을 관리합니다.", "/상점", "SignShop.commands.shop.shop", new String[] { "shop" });
+		this.registerCommand("구매", "아이템을 구매합니다.", "/구매 [수량]","SignShop.commands.buy", new String[] { "buy" });
+		this.registerCommand("판매", "아이템을 판매합니다.", "/판매 [수량]", "SignShop.commands.sell", new String[] { "sell" });
+		this.registerCommand("상점", "상점을 관리합니다.", "/상점", "SignShop.commands.shop", new String[] { "shop" });
 		this.getDataFolder().mkdirs();
 		File data = new File(this.getDataFolder().getAbsolutePath() + "/price.txt");
 		if (data.exists()) {
@@ -188,7 +188,7 @@ public class SignShop extends PluginBase implements Listener {
 
 			item1 = (Item) this.buy.get(player);
 			b1 = (Double[]) this.json.get(item1.getName());
-			if (b1[0].doubleValue() <= 0.0D) {
+			if (b1[0].doubleValue() <= 0.0) {
 				sender.sendMessage(this.T[2] + "[상점] 이 아이템은 구매가 불가능합니다.");
 				return true;
 			}
@@ -224,7 +224,7 @@ public class SignShop extends PluginBase implements Listener {
 			if (!this.buy.containsKey(player)) {
 				item1 = player.getInventory().getItemInHand();
 				b1 = (Double[]) this.json.get(item1.getName());
-				if (b1[1].doubleValue() <= 0.0D) {
+				if (b1[1].doubleValue() <= 0.0) {
 					sender.sendMessage(this.T[2] + "[상점] 이 아이템은 판매가 불가능합니다.");
 					return true;
 				}
@@ -256,7 +256,7 @@ public class SignShop extends PluginBase implements Listener {
 			item1 = (Item) this.buy.get(player);
 			b1 = (Double[]) this.json.get(item1.getName());
 			count = null;
-			if (b1[1].doubleValue() <= 0.0D) {
+			if (b1[1].doubleValue() <= 0.0) {
 				sender.sendMessage(this.T[2] + "[상점] 이 아이템은 판매가 불가능합니다.");
 				return true;
 			}
@@ -353,7 +353,7 @@ public class SignShop extends PluginBase implements Listener {
 		return true;
 	}
 
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Block block = event.getBlock();
 		Player player = event.getPlayer();
@@ -371,14 +371,14 @@ public class SignShop extends PluginBase implements Listener {
 
 				Double[] money = (Double[]) this.json.get(item.getName());
 				String[] moneyText = new String[2];
-				if (money[0].doubleValue() <= 0.0D) {
+				if (money[0].doubleValue() <= 0.0) {
 					moneyText[0] = "구매 불가";
 				} else {
 					moneyText[0] = Double.toString(money[0].doubleValue()) + this.T[0]
 							+ EconomyAPI.getInstance().getMonetaryUnit();
 				}
 
-				if (money[1].doubleValue() <= 0.0D) {
+				if (money[1].doubleValue() <= 0.0) {
 					moneyText[1] = "판매 불가";
 				} else {
 					moneyText[1] = Double.toString(money[1].doubleValue()) + this.T[0]
@@ -408,7 +408,7 @@ public class SignShop extends PluginBase implements Listener {
 
 	}
 
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onBlockBreak(BlockBreakEvent event) {
 		Block block = event.getBlock();
 		Player player = event.getPlayer();
@@ -416,7 +416,7 @@ public class SignShop extends PluginBase implements Listener {
 			BlockEntitySign Sign = (BlockEntitySign) player.getLevel()
 					.getBlockEntity(new Vector3(block.getX(), block.getY(), block.getZ()));
 			String[] text = Sign.getText();
-			if (!player.hasPermission("SignShop.break.break.break") && text[0].equals(this.T[1] + "[ 상점 ]")) {
+			if (!player.hasPermission("SignShop.break") && text[0].equals(this.T[1] + "[ 상점 ]")) {
 				event.setCancelled(true);
 			}
 		}

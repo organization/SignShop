@@ -1,5 +1,19 @@
 name: SignShop
 main: zingding.SignShop
 author: ZINGDING  
-version: 0.0.1-SNAPSHOT
+version: 0.0.2
 api: [1.0.0]
+
+permissions:
+ SignShop:
+  children:
+   SignShop.break:
+    default: true
+   SignShop.commands:
+    children:
+     SignShop.commands.buy:
+      default: true
+     SignShop.commands.sell:
+      default: true
+     SignShop.commands.shop:
+      default: op
