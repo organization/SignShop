@@ -1,7 +1,7 @@
 name: SignShop
 main: zingding.SignShop
-author: ZINGDING  
-version: 0.0.2
+author: ZINGDING
+version: 0.0.2-SNAPSHOT
 api: [1.0.0]
 
 permissions:
