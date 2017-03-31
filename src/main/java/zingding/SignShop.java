@@ -433,7 +433,7 @@ public class SignShop extends PluginBase implements Listener {
 			BlockEntitySign Sign = (BlockEntitySign) player.getLevel()
 					.getBlockEntity(new Vector3(block.getX(), block.getY(), block.getZ()));
 			String[] text = Sign.getText();
-			if (!player.hasPermission("SignShop.break") && text[0].equals(this.T[1] + "[ 상점 ]")) {
+			if (!player.hasPermission("SignShop.break") && text[0].equals(this.T[1] + "[ shop ]")) {
 				event.setCancelled(true);
 			}
 		}
