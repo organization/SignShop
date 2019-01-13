@@ -173,9 +173,9 @@ public class SignShop extends PluginBase implements Listener {
 
 	public void onEnable() {
 		this.getServer().getPluginManager().registerEvents(this, this);
-		this.registerCommand("purchase", "Purchase items.", "/ Purchase [quantity]","SignShop.commands.buy", new String[] { "buy" });
-		this.registerCommand("Sales", "Sell items.", "/ Sales [quantity]", "SignShop.commands.sell", new String[] { "sell" });
-		this.registerCommand("shop", "Manage your store.", "/shop", "SignShop.commands.shop", new String[] { "shop" });
+		this.registerCommand("buy", "Purchase items.", "/buy [quantity]","SignShop.commands.buy", new String[] { "buy" });
+		this.registerCommand("sell", "Sell items.", "/sell [quantity]", "SignShop.commands.sell", new String[] { "sell" });
+		this.registerCommand("shop", "Manage your shop.", "/shop", "SignShop.commands.shop", new String[] { "shop" });
 		this.getDataFolder().mkdirs();
 		File data = new File(this.getDataFolder().getAbsolutePath() + "/price.txt");
 		if (data.exists()) {
@@ -192,9 +192,9 @@ public class SignShop extends PluginBase implements Listener {
 		Integer count;
 		Item item1;
 		Double[] b1;
-		if (cmd.equals("purchase")) {
+		if (cmd.equals("buy")) {
 			if (args.length < 1) {
-				sender.sendMessage(this.T[2] + "Please write down the number of purchases.");
+				sender.sendMessage(this.T[2] + "Please write the number of purchases.");
 				return true;
 			}
 
@@ -215,7 +215,7 @@ public class SignShop extends PluginBase implements Listener {
 				count = Integer.valueOf(Integer.parseInt(args[0]));
 			} else {
 				if (!args[0].equals("all")) {
-					sender.sendMessage(this.T[2] + "[Store] Enter an integer or all.");
+					sender.sendMessage(this.T[2] + "[Store] Enter an number or all.");
 					return true;
 				}
 
@@ -224,17 +224,17 @@ public class SignShop extends PluginBase implements Listener {
 			}
 
 			if (EconomyAPI.getInstance().myMoney(player) < (double) count.intValue() * b1[0].doubleValue()) {
-				sender.sendMessage(this.T[2] + "[Store] There is not enough money.");
+				sender.sendMessage(this.T[2] + "[Store] You have not enough money.");
 				return true;
 			}
 
 			EconomyAPI.getInstance().reduceMoney(player, (double) count.intValue() * b1[0].doubleValue());
 			item1.setCount(count.intValue());
 			player.getInventory().addItem(new Item[] { item1 });
-			player.sendMessage(this.T[0] + "I've completed my purchase!");
-		} else if (cmd.equals("Sales")) {
+			player.sendMessage(this.T[0] + "Purchase completed!");
+		} else if (cmd.equals("sell")) {
 			if (args.length < 1) {
-				sender.sendMessage(this.T[2] + "Please write down the number of purchases.");
+				sender.sendMessage(this.T[2] + "Please write the number of purchases.");
 				return true;
 			}
 
@@ -251,7 +251,7 @@ public class SignShop extends PluginBase implements Listener {
 					count = Integer.valueOf(Integer.parseInt(args[0]));
 				} else {
 					if (!args[0].equals("all")) {
-						sender.sendMessage(this.T[2] + "[Store] Enter an integer or all.");
+						sender.sendMessage(this.T[2] + "[Store] Enter an number or all.");
 						return true;
 					}
 
@@ -259,7 +259,7 @@ public class SignShop extends PluginBase implements Listener {
 				}
 
 				if (this.getItemCount(player, item1).intValue() < count.intValue()) {
-					sender.sendMessage(this.T[2] + "[Store] Item is not enough.");
+					sender.sendMessage(this.T[2] + "[Store] There is no enough items in store.");
 					return true;
 				}
 
@@ -282,7 +282,7 @@ public class SignShop extends PluginBase implements Listener {
 				count = Integer.valueOf(Integer.parseInt(args[0]));
 			} else {
 				if (!args[0].equals("all")) {
-					sender.sendMessage(this.T[2] + "[Store] Please enter an integer or all.");
+					sender.sendMessage(this.T[2] + "[Store] Please enter an number or all.");
 					return true;
 				}
 
@@ -290,7 +290,7 @@ public class SignShop extends PluginBase implements Listener {
 			}
 
 			if (this.getItemCount(player, item1).intValue() < count.intValue()) {
-				sender.sendMessage(this.T[2] + "[Store] Item is not enough.");
+				sender.sendMessage(this.T[2] + "[Store] There is no enough items in store.");
 				return true;
 			}
 
@@ -301,15 +301,15 @@ public class SignShop extends PluginBase implements Listener {
 		} else if (cmd.equals("shop")) {
 			if (args.length < 1) {
 				sender.sendMessage(
-				 this.T[0] + "1. " + this.T[1] + "/Create Store [id](:[damage])" + this.T[0] + "- Create a store.");
-				sender.sendMessage(this.T[0] + "2. " + this.T[1] + "/Remove Store" + this.T[0] + "-Remove the store.");
-				sender.sendMessage(this.T[0] + "3. " + this.T[1] + "/Cancel Store" + this.T[0] + "-Cancel the store operation.");
+				 this.T[0] + "1. " + this.T[1] + "/create Store [id](:[damage])" + this.T[0] + "- Create a store.");
+				sender.sendMessage(this.T[0] + "2. " + this.T[1] + "/remove Store" + this.T[0] + "-Remove the store.");
+				sender.sendMessage(this.T[0] + "3. " + this.T[1] + "/cancel Store" + this.T[0] + "-Cancel the store operation.");
 				return true;
 			}
 
 			if (args[0].equals("produce")) {
 				if (this.register.containsKey(player)) {
-					sender.sendMessage(this.T[2] + "[Store] Already creating the store.");
+					sender.sendMessage(this.T[2] + "[Store] Already created store.");
 					return true;
 				}
 
@@ -329,7 +329,7 @@ public class SignShop extends PluginBase implements Listener {
 				} else if (args[1].indexOf(":") != -1) {
 					String[] b = args[1].split(":");
 					if (!isNumber(b[0]) || !isNumber(b[1])) {
-						sender.sendMessage(this.T[2] + "[Store] Item code and damage must be an integer.");
+						sender.sendMessage(this.T[2] + "[Store] Item code and damage must be an number.");
 						return true;
 					}
 
@@ -341,7 +341,7 @@ public class SignShop extends PluginBase implements Listener {
 				sender.sendMessage(this.T[0] + "Touch the [Store] sign to create a store.");
 			} else if (args[0].equals("remove")) {
 				if (this.register.containsKey(player)) {
-					sender.sendMessage(this.T[2] + "[Store] You are already removing the store..");
+					sender.sendMessage(this.T[2] + "[Store] You are already removed the store..");
 					return true;
 				}
 
@@ -350,9 +350,9 @@ public class SignShop extends PluginBase implements Listener {
 			} else {
 				if (!args[0].equals("cancel")) {
 					sender.sendMessage(
-					this.T[0] + "1. " + this.T[1] + "/Create Store [id](:[damage])" + this.T[0] + "-Create a store.");
-					sender.sendMessage(this.T[0] + "2. " + this.T[1] + "/Remove a store" + this.T[0] + "-Remove a store.");
-					sender.sendMessage(this.T[0] + "3. " + this.T[1] + "/Cancel Store" + this.T[0] + "-Cancel Store.");
+					this.T[0] + "1. " + this.T[1] + "/create Store [id](:[damage])" + this.T[0] + " Create a store.");
+					sender.sendMessage(this.T[0] + "2. " + this.T[1] + "/remove a store" + this.T[0] + " Remove a store.");
+					sender.sendMessage(this.T[0] + "3. " + this.T[1] + "/cancel Store" + this.T[0] + " Cancel Store.");
 					return true;
 				}
 
@@ -383,7 +383,7 @@ public class SignShop extends PluginBase implements Listener {
 				item = (Item) this.register.get(player);
 				if (item == null) {
 					Sign.setText("", "", "", "");
-					player.sendMessage(this.T[0] + "[Store] Successfully uninstalled the store!");
+					player.sendMessage(this.T[0] + "[Store] Successfully removed the store!");
 				}
 
 				Double[] money = (Double[]) this.json.get(item.getName());
@@ -418,7 +418,7 @@ public class SignShop extends PluginBase implements Listener {
 					player.sendMessage(this.T[0] + "=====[ shop ]=====");
 					player.sendMessage(this.T[1] + text[1] + this.T[0] + "You have selected.");
 					player.sendMessage(text[2] + this.T[0] + " Number of possession: " + this.T[1] + this.getItemCount(player, item));
-					player.sendMessage(this.T[1] + "/Buy | Sales [quantity | all ]" + this.T[0] + "Deal with.");
+					player.sendMessage(this.T[1] + "/buy | sell [quantity | all ]" + this.T[0]);
 				}
 			}
 		}
