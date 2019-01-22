@@ -173,9 +173,9 @@ public class SignShop extends PluginBase implements Listener {
 
 	public void onEnable() {
 		this.getServer().getPluginManager().registerEvents(this, this);
-		this.registerCommand("구매", "아이템을 구매합니다.", "/구매 [수량]","SignShop.commands.buy", new String[] { "buy" });
-		this.registerCommand("판매", "아이템을 판매합니다.", "/판매 [수량]", "SignShop.commands.sell", new String[] { "sell" });
-		this.registerCommand("상점", "상점을 관리합니다.", "/상점", "SignShop.commands.shop", new String[] { "shop" });
+		this.registerCommand("buy", "Purchase items.", "/buy [quantity]","SignShop.commands.buy", new String[] { "buy" });
+		this.registerCommand("sell", "Sell items.", "/sell [quantity]", "SignShop.commands.sell", new String[] { "sell" });
+		this.registerCommand("shop", "Manage your shop.", "/shop", "SignShop.commands.shop", new String[] { "shop" });
 		this.getDataFolder().mkdirs();
 		File data = new File(this.getDataFolder().getAbsolutePath() + "/price.txt");
 		if (data.exists()) {
@@ -192,21 +192,21 @@ public class SignShop extends PluginBase implements Listener {
 		Integer count;
 		Item item1;
 		Double[] b1;
-		if (cmd.equals("구매")) {
+		if (cmd.equals("buy")) {
 			if (args.length < 1) {
-				sender.sendMessage(this.T[2] + "구매할 갯수를 써 주세요.");
+				sender.sendMessage(this.T[2] + "Please write the number of purchases.");
 				return true;
 			}
 
 			if (!this.buy.containsKey(player)) {
-				sender.sendMessage(this.T[2] + "[상점] 상점에서 아이템을 선택하세요.");
+				sender.sendMessage(this.T[2] + "[Store] Please select an item in the store  .");
 				return true;
 			}
 
 			item1 = (Item) this.buy.get(player);
 			b1 = (Double[]) this.json.get(item1.getName());
 			if (b1[0].doubleValue() <= 0.0) {
-				sender.sendMessage(this.T[2] + "[상점] 이 아이템은 구매가 불가능합니다.");
+				sender.sendMessage(this.T[2] + "[Store] This item can not be purchased.");
 				return true;
 			}
 
@@ -215,7 +215,7 @@ public class SignShop extends PluginBase implements Listener {
 				count = Integer.valueOf(Integer.parseInt(args[0]));
 			} else {
 				if (!args[0].equals("all")) {
-					sender.sendMessage(this.T[2] + "[상점] 정수 또는 all을 입력하세요.");
+					sender.sendMessage(this.T[2] + "[Store] Enter an number or all.");
 					return true;
 				}
 
@@ -224,17 +224,17 @@ public class SignShop extends PluginBase implements Listener {
 			}
 
 			if (EconomyAPI.getInstance().myMoney(player) < (double) count.intValue() * b1[0].doubleValue()) {
-				sender.sendMessage(this.T[2] + "[상점] 돈이 부족합니다.");
+				sender.sendMessage(this.T[2] + "[Store] You have not enough money.");
 				return true;
 			}
 
 			EconomyAPI.getInstance().reduceMoney(player, (double) count.intValue() * b1[0].doubleValue());
 			item1.setCount(count.intValue());
 			player.getInventory().addItem(new Item[] { item1 });
-			player.sendMessage(this.T[0] + "구매를 완료했습니다!");
-		} else if (cmd.equals("판매")) {
+			player.sendMessage(this.T[0] + "Purchase completed!");
+		} else if (cmd.equals("sell")) {
 			if (args.length < 1) {
-				sender.sendMessage(this.T[2] + "구매할 갯수를 써 주세요.");
+				sender.sendMessage(this.T[2] + "Please write the number of purchases.");
 				return true;
 			}
 
@@ -242,7 +242,7 @@ public class SignShop extends PluginBase implements Listener {
 				item1 = player.getInventory().getItemInHand();
 				b1 = (Double[]) this.json.get(item1.getName());
 				if (b1[1].doubleValue() <= 0.0) {
-					sender.sendMessage(this.T[2] + "[상점] 이 아이템은 판매가 불가능합니다.");
+					sender.sendMessage(this.T[2] + "[Store] This item is not available for sale.");
 					return true;
 				}
 
@@ -251,7 +251,7 @@ public class SignShop extends PluginBase implements Listener {
 					count = Integer.valueOf(Integer.parseInt(args[0]));
 				} else {
 					if (!args[0].equals("all")) {
-						sender.sendMessage(this.T[2] + "[상점] 정수 또는 all을 입력하세요.");
+						sender.sendMessage(this.T[2] + "[Store] Enter an number or all.");
 						return true;
 					}
 
@@ -259,14 +259,14 @@ public class SignShop extends PluginBase implements Listener {
 				}
 
 				if (this.getItemCount(player, item1).intValue() < count.intValue()) {
-					sender.sendMessage(this.T[2] + "[상점] 아이템이 부족합니다.");
+					sender.sendMessage(this.T[2] + "[Store] There is no enough items in store.");
 					return true;
 				}
 
 				EconomyAPI.getInstance().addMoney(player, (double) count.intValue() * b1[1].doubleValue());
 				item1.setCount(count.intValue());
 				player.getInventory().removeItem(new Item[] { item1 });
-				player.sendMessage(this.T[0] + "판매를 완료했습니다!");
+				player.sendMessage(this.T[0] + "I have completed the sale!");
 				return true;
 			}
 
@@ -274,7 +274,7 @@ public class SignShop extends PluginBase implements Listener {
 			b1 = (Double[]) this.json.get(item1.getName());
 			count = null;
 			if (b1[1].doubleValue() <= 0.0) {
-				sender.sendMessage(this.T[2] + "[상점] 이 아이템은 판매가 불가능합니다.");
+				sender.sendMessage(this.T[2] + "[Store] This item is not available for sale.");
 				return true;
 			}
 
@@ -282,7 +282,7 @@ public class SignShop extends PluginBase implements Listener {
 				count = Integer.valueOf(Integer.parseInt(args[0]));
 			} else {
 				if (!args[0].equals("all")) {
-					sender.sendMessage(this.T[2] + "[상점] 정수 또는 all을 입력하세요.");
+					sender.sendMessage(this.T[2] + "[Store] Please enter an number or all.");
 					return true;
 				}
 
@@ -290,26 +290,26 @@ public class SignShop extends PluginBase implements Listener {
 			}
 
 			if (this.getItemCount(player, item1).intValue() < count.intValue()) {
-				sender.sendMessage(this.T[2] + "[상점] 아이템이 부족합니다.");
+				sender.sendMessage(this.T[2] + "[Store] There is no enough items in store.");
 				return true;
 			}
 
 			EconomyAPI.getInstance().addMoney(player, (double) count.intValue() * b1[1].doubleValue());
 			item1.setCount(count.intValue());
 			player.getInventory().removeItem(new Item[] { item1 });
-			player.sendMessage(this.T[0] + "판매를 완료했습니다!");
-		} else if (cmd.equals("상점")) {
+			player.sendMessage(this.T[0] + "I have completed the sale!");
+		} else if (cmd.equals("shop")) {
 			if (args.length < 1) {
 				sender.sendMessage(
-						this.T[0] + "1. " + this.T[1] + "/상점 생성 [id](:[damage])" + this.T[0] + "-상점을 생성합니다.");
-				sender.sendMessage(this.T[0] + "2. " + this.T[1] + "/상점 제거" + this.T[0] + "-상점을 제거합니다.");
-				sender.sendMessage(this.T[0] + "3. " + this.T[1] + "/상점 취소" + this.T[0] + "-상점 작업을 취소합니다.");
+				 this.T[0] + "1. " + this.T[1] + "/create Store [id](:[damage])" + this.T[0] + "- Create a store.");
+				sender.sendMessage(this.T[0] + "2. " + this.T[1] + "/remove Store" + this.T[0] + "-Remove the store.");
+				sender.sendMessage(this.T[0] + "3. " + this.T[1] + "/cancel Store" + this.T[0] + "-Cancel the store operation.");
 				return true;
 			}
 
-			if (args[0].equals("생성")) {
+			if (args[0].equals("produce")) {
 				if (this.register.containsKey(player)) {
-					sender.sendMessage(this.T[2] + "[상점] 이미 상점을 생성중입니다.");
+					sender.sendMessage(this.T[2] + "[Store] Already created store.");
 					return true;
 				}
 
@@ -317,7 +317,7 @@ public class SignShop extends PluginBase implements Listener {
 				if (args[1].indexOf(":") == -1) {
 					if (!isNumber(args[1])) {
 						if (Item.fromString(args[1]) == null) {
-							sender.sendMessage(this.T[2] + "[상점] 해당하는 아이템을 찾을 수 없습니다.");
+							sender.sendMessage(this.T[2] + "[Store] No such item found.");
 							return true;
 						}
 
@@ -329,7 +329,7 @@ public class SignShop extends PluginBase implements Listener {
 				} else if (args[1].indexOf(":") != -1) {
 					String[] b = args[1].split(":");
 					if (!isNumber(b[0]) || !isNumber(b[1])) {
-						sender.sendMessage(this.T[2] + "[상점] 아이템 코드와 데미지는 정수여야 합니다.");
+						sender.sendMessage(this.T[2] + "[Store] Item code and damage must be an number.");
 						return true;
 					}
 
@@ -338,31 +338,31 @@ public class SignShop extends PluginBase implements Listener {
 				}
 
 				this.register.put(player, Item.get(item[0].intValue(), item[1]));
-				sender.sendMessage(this.T[0] + "[상점] 표지판을 터치하시면 상점이 생성됩니다.");
-			} else if (args[0].equals("제거")) {
+				sender.sendMessage(this.T[0] + "Touch the [Store] sign to create a store.");
+			} else if (args[0].equals("remove")) {
 				if (this.register.containsKey(player)) {
-					sender.sendMessage(this.T[2] + "[상점] 이미 상점을 제거중입니다.");
+					sender.sendMessage(this.T[2] + "[Store] You are already removed the store..");
 					return true;
 				}
 
 				this.register.put(player, (Item) null);
-				sender.sendMessage(this.T[2] + "[상점] 상점을 터치하시면 제거됩니다.");
+				sender.sendMessage(this.T[2] + "[Store] Touch to remove the store.");
 			} else {
-				if (!args[0].equals("취소")) {
+				if (!args[0].equals("cancel")) {
 					sender.sendMessage(
-							this.T[0] + "1. " + this.T[1] + "/상점 생성 [id](:[damage])" + this.T[0] + "-상점을 생성합니다.");
-					sender.sendMessage(this.T[0] + "2. " + this.T[1] + "/상점 제거" + this.T[0] + "-상점을 제거합니다.");
-					sender.sendMessage(this.T[0] + "3. " + this.T[1] + "/상점 취소" + this.T[0] + "-상점 작업을 취소합니다.");
+					this.T[0] + "1. " + this.T[1] + "/create Store [id](:[damage])" + this.T[0] + " Create a store.");
+					sender.sendMessage(this.T[0] + "2. " + this.T[1] + "/remove a store" + this.T[0] + " Remove a store.");
+					sender.sendMessage(this.T[0] + "3. " + this.T[1] + "/cancel Store" + this.T[0] + " Cancel Store.");
 					return true;
 				}
 
 				if (!this.register.containsKey(player)) {
-					sender.sendMessage(this.T[2] + "[상점] 취소할 작업이 없습니다.");
+					sender.sendMessage(this.T[2] + "[Store] No action to cancel.");
 					return true;
 				}
 
 				this.register.remove(player);
-				sender.sendMessage(this.T[0] + "[상점] 작업을 취소했습니다.");
+				sender.sendMessage(this.T[0] + "Canceled [store] operation.");
 				this.register.put(player, (Item) null);
 			}
 		}
@@ -383,29 +383,29 @@ public class SignShop extends PluginBase implements Listener {
 				item = (Item) this.register.get(player);
 				if (item == null) {
 					Sign.setText("", "", "", "");
-					player.sendMessage(this.T[0] + "[상점] 성공적으로 상점을 제거했습니다!");
+					player.sendMessage(this.T[0] + "[Store] Successfully removed the store!");
 				}
 
 				Double[] money = (Double[]) this.json.get(item.getName());
 				String[] moneyText = new String[2];
 				if (money[0].doubleValue() <= 0.0) {
-					moneyText[0] = "구매 불가";
+					moneyText[0] = "Can not buy";
 				} else {
 					moneyText[0] = Double.toString(money[0].doubleValue()) + this.T[0]
 							+ EconomyAPI.getInstance().getMonetaryUnit();
 				}
 
 				if (money[1].doubleValue() <= 0.0) {
-					moneyText[1] = "판매 불가";
+					moneyText[1] = "Not Available";
 				} else {
 					moneyText[1] = Double.toString(money[1].doubleValue()) + this.T[0]
 							+ EconomyAPI.getInstance().getMonetaryUnit();
 				}
 
-				Sign.setText(this.T[1] + "[ 상점 ]", this.T[0] + item.getName(), this.T[0] + "구매 : " + this.T[1]
-						+ moneyText[0] + this.T[0] + " 판매 : " + this.T[1] + moneyText[1]);
+				Sign.setText(this.T[1] + "[ shop ]", this.T[0] + item.getName(), this.T[0] + "purchase : " + this.T[1]
+						+ moneyText[0] + this.T[0] + " Sales : " + this.T[1] + moneyText[1]);
 				this.register.remove(player);
-				player.sendMessage(this.T[0] + "[상점] 성공적으로 상점을 생성했습니다!");
+				player.sendMessage(this.T[0] + "[Store] Successfully created a store!");
 			} else {
 				if (text[1].length() < 2) {
 					return;
@@ -413,12 +413,12 @@ public class SignShop extends PluginBase implements Listener {
 
 				item = Item.fromString(text[1].substring(2, text[1].length()));
 				this.getLogger().info(item.getName());
-				if (item != null && text[0].equals(this.T[1] + "[ 상점 ]")) {
+				if (item != null && text[0].equals(this.T[1] + "[ shop ]")) {
 					this.buy.put(player, item);
-					player.sendMessage(this.T[0] + "=====[ 상점 ]=====");
-					player.sendMessage(this.T[1] + text[1] + this.T[0] + "을(를) 선택하셨습니다.");
-					player.sendMessage(text[2] + this.T[0] + " 소지갯수: " + this.T[1] + this.getItemCount(player, item));
-					player.sendMessage(this.T[1] + "/구매 | 판매 [ 수량 | all ]" + this.T[0] + "으로 거래하세요.");
+					player.sendMessage(this.T[0] + "=====[ shop ]=====");
+					player.sendMessage(this.T[1] + text[1] + this.T[0] + "You have selected.");
+					player.sendMessage(text[2] + this.T[0] + " Number of possession: " + this.T[1] + this.getItemCount(player, item));
+					player.sendMessage(this.T[1] + "/buy | sell [quantity | all ]" + this.T[0]);
 				}
 			}
 		}
@@ -433,7 +433,7 @@ public class SignShop extends PluginBase implements Listener {
 			BlockEntitySign Sign = (BlockEntitySign) player.getLevel()
 					.getBlockEntity(new Vector3(block.getX(), block.getY(), block.getZ()));
 			String[] text = Sign.getText();
-			if (!player.hasPermission("SignShop.break") && text[0].equals(this.T[1] + "[ 상점 ]")) {
+			if (!player.hasPermission("SignShop.break") && text[0].equals(this.T[1] + "[ shop ]")) {
 				event.setCancelled(true);
 			}
 		}
